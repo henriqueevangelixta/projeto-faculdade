@@ -7,10 +7,9 @@ public class SubMenuView {
         System.out.println("-------------------------");
         System.out.println("1 - Cadastrar " + value);
         System.out.println("2 - Consultar " + value);
-        System.out.println("3 - Listar " + value);
-        System.out.println("4 - Atualizar " + value);
-        System.out.println("5 - Remover " + value);
-        System.out.println("6 - Voltar ao Menu inicial");
+        System.out.println("3 - Atualizar " + value);
+        System.out.println("4 - Remover " + value);
+        System.out.println("5 - Voltar ao Menu inicial");
         System.out.println("-------------------------");
         System.out.print("Opção: ");
     }
