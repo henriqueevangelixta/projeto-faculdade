@@ -1,18 +1,19 @@
 package model;
 
+import java.util.List;
+
 public class Aluno {
 
     private String nome;
     private int idade;
     private String matricula;
+    private List<Curso> Curso;
+
 
     public Aluno(String nome, int idade, String matricula) {
         this.nome = nome;
         this.idade = idade;
         this.matricula = matricula;
-    }
-    public Aluno() {
-
     }
 
     public String getNome() {
@@ -38,4 +39,12 @@ public class Aluno {
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
+
+    public List<Curso> getCurso() {
+        return Curso;
+    }
+
+//    public void setCurso(List<Curso> curso) {
+//        Curso = curso;
+//    }
 }

@@ -16,8 +16,18 @@ public class AlunoView {
         System.out.print("Idade: ");
         aluno.setIdade(scan.nextInt());
 
-        System.out.print("Matricula: ");
+        System.out.print("Matrícula: ");
         aluno.setMatricula(scan.next());
+
+        System.out.print("Escolha o curso: ");
+        System.out.println("1 - ");
+        System.out.println("2 - Gerenciar Cursos");
+        System.out.println("3 - Gerenciar Disciplinas");
+
+        aluno.setCurso(scan.next());
+
+
+
 
     }
     public static void Atualizar(Aluno aluno) {
@@ -33,11 +43,15 @@ public class AlunoView {
 
     }
 
+    /*
     public static void Listar(List<Aluno> alunos) {
+
         for(Aluno a : alunos) {
             Consultar(a);
         }
     }
+     */
+
 
     public static void Consultar(Aluno aluno) {
         System.out.println("Matricula: " + aluno.getMatricula());
