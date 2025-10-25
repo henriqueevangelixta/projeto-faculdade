@@ -18,9 +18,8 @@ public class SubMenuController {
                 switch (opcao) {
                     case 1 -> AlunoController.Criar();
                     case 2 -> AlunoController.Consultar();
-                    case 3 -> AlunoController.Listar();
-                    case 4 -> AlunoController.Atualizar();
-                    case 5 -> AlunoController.Deletar();
+                    case 3 -> AlunoController.Atualizar();
+                    case 4 -> AlunoController.Deletar();
                 }
             }
             if (value.equals("Curso")) {
