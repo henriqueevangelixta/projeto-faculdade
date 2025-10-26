@@ -9,7 +9,7 @@ public class Main {
 
         DatabaseConnection.getConnection();
         //AlunoDAO.Criar();
-        AlunoDAO.Add();
+        //AlunoDAO.Add();
         MenuController.show();
         DatabaseConnection.closeConnection();
 
