@@ -17,6 +17,11 @@ public class CursoDAO {
 
     public static void Add(Curso curso) {
         listCursos.add(curso);
+        System.out.println("Curso cadastrado com sucesso!");
+    }
+
+    public static List<Curso> GetAll() {
+        return listCursos;
     }
 
 //    public static void Add(Curso curso) {
@@ -42,6 +47,14 @@ public class CursoDAO {
                 .filter(c -> c.getCodigo().equals(codigo))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public static void Delete(String codigo) {
+        Curso curso = Get(codigo);
+        if (curso != null) {
+            listCursos.remove(curso);
+            System.out.println("Curso removido com sucesso!");
+        }
     }
 
 //    public static Curso Get(String codigo) {
@@ -70,16 +83,9 @@ public class CursoDAO {
 //        return curso.get();
 //    }
 
-    public static List<Curso> GetAll() {
-        return listCursos;
-    }
 
-    public static void Delete(String codigo) {
-        Curso curso = Get(codigo);
-        if (curso != null) {
-            listCursos.remove(curso);
-        }
-    }
+
+
 
 //    public static void Criar() {
 //        String sqlCreateTable = """

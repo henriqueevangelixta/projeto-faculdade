@@ -13,8 +13,10 @@ public class CursoView {
         System.out.print("Código do curso: ");
         curso.setCodigo(scan.next());
 
+        scan.nextLine();
+
         System.out.print("Nome do curso: ");
-        curso.setNome(scan.next());
+        curso.setNome(scan.nextLine());
 
         System.out.print("Turno: ");
         curso.setTurno(scan.next());
@@ -37,6 +39,7 @@ public class CursoView {
             System.out.println("Curso não encontrado!");
             return;
         }
+
         System.out.println("Código: " + curso.getCodigo());
         System.out.println("Nome: " + curso.getNome());
         System.out.println("Turno: " + curso.getTurno());

@@ -17,6 +17,7 @@ public class AlunoDAO {
 
     public static void Add(Aluno aluno) {
         listAlunos.add(aluno);
+        System.out.println("Aluno cadastrado com sucesso!");
     }
 
 //    public static void Add(Aluno aluno) {
@@ -46,9 +47,7 @@ public class AlunoDAO {
 //        Optional<Aluno> aluno = Optional.empty();
 //
 //        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-//
 //            stmt.setString(1, matricula);
-//
 //            try (ResultSet rs = stmt.executeQuery()) {
 //                if (rs.next()) {
 //                    // Cria o objeto Aluno a partir dos dados retornados
@@ -59,26 +58,24 @@ public class AlunoDAO {
 //                    ));
 //                }
 //            }
-//
 //        } catch (SQLException e) {
 //            System.out.println("Erro ao consultar aluno: " + e.getMessage());
 //            throw new RuntimeException("Erro ao consultar aluno no banco de dados", e);
 //        }
-//
 //        return aluno.get();
 //    }
 
-    public static List<Aluno> GetAllByAge(int age) {
-        return listAlunos.stream().filter(a -> a.getIdade() == age).toList();
-    }
-
-    public static List<Aluno> GetAllByNameContains(String name) {
-        return listAlunos.stream().filter(a -> a.getNome().contains(name)).toList();
-    }
-
-    public static List<Aluno> GetAll() {
-        return listAlunos;
-    }
+//    public static List<Aluno> GetAllByAge(int age) {
+//        return listAlunos.stream().filter(a -> a.getIdade() == age).toList();
+//    }
+//
+//    public static List<Aluno> GetAllByNameContains(String name) {
+//        return listAlunos.stream().filter(a -> a.getNome().contains(name)).toList();
+//    }
+//
+//    public static List<Aluno> GetAll() {
+//        return listAlunos;
+//    }
 
     public static void Delete(String matricula) {
         Aluno aluno = Get(matricula);

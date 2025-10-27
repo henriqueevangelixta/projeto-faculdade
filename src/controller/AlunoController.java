@@ -6,13 +6,13 @@ import view.AlunoView;
 
 public class AlunoController {
 
-//    public static void Criar() {
-//        Aluno aluno = new Aluno();
-//        AlunoView.Criar(aluno);
-//        if (aluno != null) {
-//            AlunoDAO.Add(aluno);
-//        }
-//    }
+    public static void Criar() {
+        Aluno aluno = new Aluno();
+        AlunoView.Criar(aluno);
+        if (aluno != null) {
+            AlunoDAO.Add(aluno);
+        }
+    }
 
     public static void Consultar() {
         String matricula = AlunoView.GetMatricula();

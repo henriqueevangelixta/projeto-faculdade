@@ -21,14 +21,14 @@ public class DisciplinaView {
         System.out.print("Carga horária: ");
         disciplina.setCargaHoraria(scan.nextInt());
 
-//        System.out.println("Selecione o curso ao qual pertence esta disciplina:");
-//        List<Curso> cursos = CursoDAO.GetAll();
-//        for (int i = 0; i < cursos.size(); i++) {
-//            System.out.println((i + 1) + " - " + cursos.get(i).getNome());
-//        }
-//        int opc = scan.nextInt();
-//        disciplina.setCurso(cursos.get(opc - 1));
-//        cursos.get(opc - 1).addDisciplina(disciplina);
+        System.out.println("Selecione o curso ao qual pertence esta disciplina:");
+        List<Curso> cursos = CursoDAO.GetAll();
+        for (int i = 0; i < cursos.size(); i++) {
+            System.out.println((i + 1) + " - " + cursos.get(i).getNome());
+        }
+        int opc = scan.nextInt();
+        disciplina.setCurso(cursos.get(opc - 1));
+        cursos.get(opc - 1).addDisciplina(disciplina);
     }
 
     public static void Atualizar(Disciplina disciplina) {

@@ -1,6 +1,8 @@
 package view;
 
+import dao.CursoDAO;
 import model.Aluno;
+import model.Curso;
 
 import java.util.List;
 import java.util.Scanner;
@@ -11,25 +13,55 @@ public class AlunoView {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("Nome: ");
-        aluno.setNome(scan.next());
+        aluno.setNome(scan.nextLine());
 
         System.out.print("Idade: ");
         aluno.setIdade(scan.nextInt());
 
-        System.out.print("Matrícula: ");
-        aluno.setMatricula(scan.next());
+        scan.nextLine();
 
-        System.out.print("Escolha o curso: ");
-        System.out.println("1 - ");
-        System.out.println("2 - Gerenciar Cursos");
-        System.out.println("3 - Gerenciar Disciplinas");
+        System.out.print("Matricula: ");
+        aluno.setMatricula(scan.nextLine());
 
-        aluno.setCurso(scan.next());
+        System.out.println("Selecione o curso do aluno:");
+        List<Curso> cursos = CursoDAO.GetAll();
 
+        if (cursos.isEmpty()) {
+            System.out.println("Nenhum curso cadastrado. Aluno não pode ser matriculado.");
+            return;
+        }
 
+        for (int i = 0; i < cursos.size(); i++) {
+            System.out.println((i + 1) + " - " + cursos.get(i).getNome());
+        }
+        System.out.print("Opção: ");
+        int opc = scan.nextInt();
+        scan.nextLine();
+
+        if (opc > 0 && opc <= cursos.size()) {
+            aluno.setCurso(cursos.get(opc - 1));
+        } else {
+            System.out.println("Opção inválida! O aluno será salvo sem curso.");
+        }
 
 
     }
+
+    public static String GetMatricula() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Informe sua matricula: ");
+        String matricula = scan.next();
+        return matricula;
+    }
+
+    public static void Consultar(Aluno aluno) {
+        System.out.println("Matrícula: " + aluno.getMatricula());
+        System.out.println("Nome: " + aluno.getNome());
+        System.out.println("Idade: " + aluno.getIdade());
+        System.out.println("Cadastrado no curso: " + aluno.getCurso().getNome());
+        System.out.println();
+    }
+
     public static void Atualizar(Aluno aluno) {
         Scanner scan = new Scanner(System.in);
 
@@ -43,28 +75,14 @@ public class AlunoView {
 
     }
 
-    /*
-    public static void Listar(List<Aluno> alunos) {
-
-        for(Aluno a : alunos) {
-            Consultar(a);
-        }
-    }
-     */
+//    public static void Listar(List<Aluno> alunos) {
+//        for(Aluno a : alunos) {
+//            Consultar(a);
+//        }
+//    }
 
 
-    public static void Consultar(Aluno aluno) {
-        System.out.println("Matricula: " + aluno.getMatricula());
-        System.out.println("Nome: " + aluno.getNome());
-        System.out.println("Idade: " + aluno.getIdade());
-        System.out.println();
-    }
 
-    public static String GetMatricula() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Informe sua matricula: ");
-        String matricula = scan.next();
-        return matricula;
-    }
+
 
 }
