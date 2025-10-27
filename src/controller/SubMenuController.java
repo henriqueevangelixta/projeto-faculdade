@@ -24,10 +24,10 @@ public class SubMenuController {
             }
             if (value.equals("Curso")) {
                 switch (opcao) {
-//                    case 1 -> CursoController.Criar();
-//                    case 2 -> CursoController.Consultar();
-//                    case 3 -> CursoController.Atualizar();
-//                    case 4 -> CursoController.Deletar();
+                    case 1 -> CursoController.Criar();
+                    case 2 -> CursoController.Consultar();
+                    case 3 -> CursoController.Atualizar();
+                    case 4 -> CursoController.Deletar();
                 }
             }
             if (value.equals("Disciplina")) {
