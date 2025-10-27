@@ -13,5 +13,16 @@ public class Main {
         MenuController.show();
         DatabaseConnection.closeConnection();
 
+
+            System.out.println("=====================================");
+            System.out.println("   SISTEMA DE GESTÃO DA FACULDADE   ");
+            System.out.println("=====================================");
+            System.out.println("Iniciando sistema...\n");
+
+            // Inicializa o menu principal
+            MenuController.show();
+
+            System.out.println("\nSistema finalizado. Até logo!");
+
     }
 }

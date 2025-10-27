@@ -19,6 +19,14 @@ public class AlunoView {
         System.out.print("Matricula: ");
         aluno.setMatricula(scan.next());
 
+//        System.out.println("Selecione o curso do aluno:");
+//        List<Curso> cursos = CursoDAO.GetAll();
+//        for (int i = 0; i < cursos.size(); i++) {
+//            System.out.println((i + 1) + " - " + cursos.get(i).getNome());
+//        }
+//        int opc = scan.nextInt();
+//        aluno.setCurso(cursos.get(opc - 1));
+
     }
     public static void Atualizar(Aluno aluno) {
         Scanner scan = new Scanner(System.in);

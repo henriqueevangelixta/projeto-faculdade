@@ -5,6 +5,8 @@ public class Disciplina {
     private String nome;
     private int cargaHoraria;
 
+    private Curso curso;
+
     // Construtor com parâmetros
     public Disciplina(String codigo, String nome, int cargaHoraria) {
         this.codigo = codigo;
@@ -40,4 +42,7 @@ public class Disciplina {
     public void setCargaHoraria(int cargaHoraria) {
         this.cargaHoraria = cargaHoraria;
     }
+
+    public Curso getCurso() { return curso; }
+    public void setCurso(Curso curso) { this.curso = curso; }
 }
