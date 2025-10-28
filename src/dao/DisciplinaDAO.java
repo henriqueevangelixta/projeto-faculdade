@@ -2,112 +2,160 @@ package dao;
 
 import database.DatabaseConnection;
 import model.Disciplina;
+import model.Curso;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class DisciplinaDAO {
 
-    private static List<Disciplina> listDisciplinas = new ArrayList<>();
-
+    // --- CREATE (Adicionar) ---
+    // Assume que 'disciplina.getCurso()' e 'disciplina.getCurso().getId()' são válidos
     public static void Add(Disciplina disciplina) {
-        listDisciplinas.add(disciplina);
+
+        String sql = "INSERT INTO disciplina (codigo, nome, carga_horaria, curso_id) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, disciplina.getCodigo());
+            stmt.setString(2, disciplina.getNome());
+            stmt.setInt(3, disciplina.getCargaHoraria());
+            stmt.setInt(4, disciplina.getCurso().getId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar disciplina: " + e.getMessage());
+            throw new RuntimeException("Falha ao salvar disciplina", e);
+        }
     }
 
-//    public static void Add(Disciplina disciplina) {
-//        String sql = "INSERT INTO disciplinas (codigo, nome, carga_horaria) VALUES (?, ?, ?)";
-//
-//        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-//
-//            stmt.setString(1, disciplina.getCodigo());
-//            stmt.setString(2, disciplina.getNome());
-//            stmt.setInt(3, disciplina.getCargaHoraria());
-//
-//            stmt.executeUpdate();
-//            System.out.println("Disciplina cadastrada com sucesso!");
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erro ao cadastrar disciplina: " + e.getMessage());
-//            throw new RuntimeException("Erro ao cadastrar disciplina no banco de dados", e);
-//        }
-//    }
-
-    public static Disciplina Get(String codigo) {
-        return listDisciplinas.stream()
-                .filter(d -> d.getCodigo().equals(codigo))
-                .findFirst()
-                .get();
-    }
-
-//    public static Disciplina Get(String codigo) {
-//        String sql = "SELECT * FROM disciplinas WHERE codigo = ?";
-//        Optional<Disciplina> disciplina = Optional.empty();
-//
-//        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-//
-//            stmt.setString(1, codigo);
-//
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                if (rs.next()) {
-//                    disciplina = Optional.of(new Disciplina(
-//                            rs.getString("codigo"),
-//                            rs.getString("nome"),
-//                            rs.getInt("carga_horaria")
-//                    ));
-//                }
-//            }
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erro ao consultar disciplina: " + e.getMessage());
-//            throw new RuntimeException("Erro ao consultar disciplina no banco de dados", e);
-//        }
-//
-//        return disciplina.get();
-//    }
-
-    public static List<Disciplina> GetAllByNameContains(String name) {
-        return listDisciplinas.stream()
-                .filter(d -> d.getNome().toLowerCase().contains(name.toLowerCase()))
-                .toList();
-    }
-
-    public static List<Disciplina> GetAllByCargaHoraria(int cargaHoraria) {
-        return listDisciplinas.stream()
-                .filter(d -> d.getCargaHoraria() == cargaHoraria)
-                .toList();
-    }
-
+    // --- READ (Buscar Todos) ---
     public static List<Disciplina> GetAll() {
-        return listDisciplinas;
+        List<Disciplina> disciplinas = new ArrayList<>();
+
+        String sql = """
+            SELECT d.id, d.codigo, d.nome, d.carga_horaria,
+                   c.id AS curso_pk, c.codigo AS curso_codigo, 
+                   c.nome AS curso_nome, c.turno AS curso_turno
+            FROM disciplina d
+            JOIN curso c ON d.curso_id = c.id
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                // 1. "Monta" o Curso
+                Curso curso = new Curso();
+                curso.setId(rs.getInt("curso_pk"));
+                curso.setCodigo(rs.getString("curso_codigo"));
+                curso.setNome(rs.getString("curso_nome"));
+                curso.setTurno(rs.getString("curso_turno"));
+
+                // 2. "Monta" a Disciplina
+                Disciplina disciplina = new Disciplina();
+                disciplina.setId(rs.getInt("id"));
+                disciplina.setCodigo(rs.getString("codigo"));
+                disciplina.setNome(rs.getString("nome"));
+                disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+
+                // 3. Associa o Curso à Disciplina
+                disciplina.setCurso(curso);
+
+                disciplinas.add(disciplina);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar disciplinas: " + e.getMessage());
+            throw new RuntimeException("Falha ao buscar disciplinas", e);
+        }
+        return disciplinas;
     }
 
+    // --- READ (Buscar Um por Código) ---
+    public static Disciplina Get(String codigo) {
+        String sql = """
+            SELECT d.id, d.codigo, d.nome, d.carga_horaria,
+                   c.id AS curso_pk, c.codigo AS curso_codigo, 
+                   c.nome AS curso_nome, c.turno AS curso_turno
+            FROM disciplina d
+            JOIN curso c ON d.curso_id = c.id
+            WHERE d.codigo = ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) { // Se encontrou
+                    // 1. "Monta" o Curso
+                    Curso curso = new Curso();
+                    curso.setId(rs.getInt("curso_pk"));
+                    curso.setCodigo(rs.getString("curso_codigo"));
+                    curso.setNome(rs.getString("curso_nome"));
+                    curso.setTurno(rs.getString("curso_turno"));
+
+                    // 2. "Monta" a Disciplina
+                    Disciplina disciplina = new Disciplina();
+                    disciplina.setId(rs.getInt("id"));
+                    disciplina.setCodigo(rs.getString("codigo"));
+                    disciplina.setNome(rs.getString("nome"));
+                    disciplina.setCargaHoraria(rs.getInt("carga_horaria"));
+
+                    // 3. Associa
+                    disciplina.setCurso(curso);
+                    return disciplina;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar disciplina: " + e.getMessage());
+            throw new RuntimeException("Falha ao buscar disciplina", e);
+        }
+        return null;
+    }
+
+    // --- UPDATE (Atualizar) ---
+    public static void Update(Disciplina disciplina) {
+        String sql = "UPDATE disciplina SET nome = ?, carga_horaria = ?, curso_id = ? WHERE codigo = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, disciplina.getNome());
+            stmt.setInt(2, disciplina.getCargaHoraria());
+            stmt.setInt(3, disciplina.getCurso().getId()); // Pega o ID do curso
+            stmt.setString(4, disciplina.getCodigo()); // O WHERE
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar disciplina: " + e.getMessage());
+            throw new RuntimeException("Falha ao atualizar disciplina", e);
+        }
+    }
+
+    // --- DELETE (Remover por Código) ---
     public static void Delete(String codigo) {
-        Disciplina disciplina = Get(codigo);
-        listDisciplinas.remove(disciplina);
-    }
+        String sql = "DELETE FROM disciplina WHERE codigo = ?";
 
-//    public static void Criar() {
-//        String sqlCreateTable = """
-//            CREATE TABLE IF NOT EXISTS disciplinas (
-//                codigo VARCHAR(10) PRIMARY KEY,
-//                nome VARCHAR(100) NOT NULL,
-//                carga_horaria INT NOT NULL
-//            );
-//        """;
-//
-//        try (Statement stmt = DatabaseConnection.getConnection().createStatement()) {
-//
-//            stmt.executeUpdate(sqlCreateTable);
-//            System.out.println("Tabela 'disciplinas' criada com sucesso!");
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erro ao criar a tabela: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao deletar disciplina: " + e.getMessage());
+            throw new RuntimeException("Falha ao deletar disciplina", e);
+        }
+    }
 }

@@ -90,7 +90,7 @@ public class AlunoView {
             if (disciplinasDoCurso == null || disciplinasDoCurso.isEmpty()) {
                 System.out.println("-> Disciplinas: (Este curso ainda não possui disciplinas)");
             } else {
-                // 6. Se tiver, faz um loop e imprime o nome de cada uma
+                // Se tiver, faz um loop e imprime o nome de cada uma
                 System.out.println("Disciplinas Cadastradas:");
                 for (Disciplina disciplina : disciplinasDoCurso) {
                     System.out.println("- " + disciplina);
@@ -120,7 +120,6 @@ public class AlunoView {
                 System.out.println("Entrada de idade inválida. Mantendo a idade anterior.");
             }
         }
-        System.out.println("Aluno atualizado com sucesso!");
     }
 
 }

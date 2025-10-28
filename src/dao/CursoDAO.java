@@ -3,107 +3,139 @@ package dao;
 import database.DatabaseConnection;
 import model.Curso;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class CursoDAO {
 
-    private static List<Curso> listCursos = new ArrayList<>();
-
+    // (CREATE)
     public static void Add(Curso curso) {
-        listCursos.add(curso);
-        System.out.println("Curso cadastrado com sucesso!");
-    }
+        String sql = "INSERT INTO curso (codigo, nome, turno) VALUES (?, ?, ?)";
 
-    public static List<Curso> GetAll() {
-        return listCursos;
-    }
+        // Usamos o 'try-with-resources' para garantir que a conexão e o 'statement' sejam fechados automaticamente
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-//    public static void Add(Curso curso) {
-//        String sql = "INSERT INTO cursos (codigo, nome, turno) VALUES (?, ?, ?)";
-//
-//        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-//
-//            stmt.setString(1, curso.getCodigo());
-//            stmt.setString(2, curso.getNome());
-//            stmt.setString(3, curso.getTurno());
-//
-//            stmt.executeUpdate();
-//            System.out.println("Curso cadastrado com sucesso!");
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erro ao cadastrar curso: " + e.getMessage());
-//            throw new RuntimeException("Erro ao cadastrar curso no banco de dados", e);
-//        }
-//    }
+            stmt.setString(1, curso.getCodigo());
+            stmt.setString(2, curso.getNome());
+            stmt.setString(3, curso.getTurno());
 
-    public static Curso Get(String codigo) {
-        return listCursos.stream()
-                .filter(c -> c.getCodigo().equals(codigo))
-                .findFirst()
-                .orElse(null);
-    }
+            stmt.executeUpdate();
+            System.out.println("Curso cadastrado com sucesso no banco!");
 
-    public static void Delete(String codigo) {
-        Curso curso = Get(codigo);
-        if (curso != null) {
-            listCursos.remove(curso);
-            System.out.println("Curso removido com sucesso!");
+        } catch (SQLException e) {
+            System.out.println("Erro ao cadastrar curso: " + e.getMessage());
+            throw new RuntimeException("Erro ao cadastrar curso no banco de dados", e);
         }
     }
 
-//    public static Curso Get(String codigo) {
-//        String sql = "SELECT * FROM cursos WHERE codigo = ?";
-//        Optional<Curso> curso = Optional.empty();
-//
-//        try (PreparedStatement stmt = DatabaseConnection.getConnection().prepareStatement(sql)) {
-//
-//            stmt.setString(1, codigo);
-//
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                if (rs.next()) {
-//                    curso = Optional.of(new Curso(
-//                            rs.getString("codigo"),
-//                            rs.getString("nome"),
-//                            rs.getString("turno")
-//                    ));
-//                }
-//            }
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erro ao consultar curso: " + e.getMessage());
-//            throw new RuntimeException("Erro ao consultar curso no banco de dados", e);
-//        }
-//
-//        return curso.get();
-//    }
+    // (READ)
+    public static List<Curso> GetAll() {
+        List<Curso> cursos = new ArrayList<>();
+        String sql = "SELECT id, codigo, nome, turno FROM curso";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Curso curso = new Curso();
+
+                curso.setId(rs.getInt("id"));
+                curso.setCodigo(rs.getString("codigo"));
+                curso.setNome(rs.getString("nome"));
+                curso.setTurno(rs.getString("turno"));
+
+                cursos.add(curso);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar cursos: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar cursos no banco de dados", e);
+        }
+
+        return cursos;
+    }
+
+    // (READ)
+    public static Curso Get(String codigo) {
+        String sql = "SELECT id, codigo, nome, turno FROM curso WHERE codigo = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Curso curso = new Curso();
+                    curso.setId(rs.getInt("id"));
+                    curso.setCodigo(rs.getString("codigo"));
+                    curso.setNome(rs.getString("nome"));
+                    curso.setTurno(rs.getString("turno"));
+                    return curso;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar curso: " + e.getMessage());
+            throw new RuntimeException("Erro ao consultar curso no banco de dados", e);
+        }
+
+        return null;
+    }
+
+    // 'Update' (UPDATE)
+    public static void Update(Curso curso) {
+        String sql = "UPDATE curso SET nome = ?, turno = ? WHERE codigo = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, curso.getNome());
+            stmt.setString(2, curso.getTurno());
+            stmt.setString(3, curso.getCodigo());
+
+            int rowsAffected = stmt.executeUpdate(); // Executa o UPDATE
+
+            if (rowsAffected > 0) {
+                System.out.println("Curso atualizado com sucesso!");
+            } else {
+                System.out.println("Nenhum curso encontrado com esse código para atualizar.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar curso: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar curso no banco de dados", e);
+        }
+    }
+
+    // 'Delete' (DELETE)
+    public static void Delete(String codigo) {
+        String sql = "DELETE FROM curso WHERE codigo = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codigo);
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Curso removido com sucesso!");
+            } else {
+                System.out.println("Nenhum curso encontrado com esse código.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao deletar curso: " + e.getMessage());
+            throw new RuntimeException("Erro ao deletar curso no banco de dados", e);
+        }
+    }
 
 
-
-
-
-//    public static void Criar() {
-//        String sqlCreateTable = """
-//            CREATE TABLE IF NOT EXISTS cursos (
-//                codigo VARCHAR(10) PRIMARY KEY,
-//                nome VARCHAR(100) NOT NULL,
-//                turno VARCHAR(50) NOT NULL
-//            );
-//        """;
-//
-//        try (Statement stmt = DatabaseConnection.getConnection().createStatement()) {
-//
-//            stmt.executeUpdate(sqlCreateTable);
-//            System.out.println("Tabela 'cursos' criada com sucesso!");
-//
-//        } catch (SQLException e) {
-//            System.out.println("Erro ao criar a tabela: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
 }

@@ -6,6 +6,7 @@ public class Aluno {
     private int idade;
     private String matricula;
     private Curso curso;
+    private int id;
 
     public Aluno(String nome, int idade, String matricula) {
         this.nome = nome;
@@ -44,4 +45,8 @@ public class Aluno {
     public Curso getCurso() { return curso; }
 
     public void setCurso(Curso curso) { this.curso = curso; }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 }

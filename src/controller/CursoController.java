@@ -20,11 +20,16 @@ public class CursoController {
         CursoView.Consultar(curso);
     }
 
-
     public static void Atualizar() {
         String codigo = CursoView.GetCodigo();
+
         Curso curso = CursoDAO.Get(codigo);
+        if (curso == null) {
+            System.out.println("Curso não encontrado.");
+            return;
+        }
         CursoView.Atualizar(curso);
+        CursoDAO.Update(curso);
     }
 
     public static void Deletar() {

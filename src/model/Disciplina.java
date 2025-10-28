@@ -5,6 +5,7 @@ public class Disciplina {
     private String nome;
     private int cargaHoraria;
     private Curso curso;
+    private int id;
 
     public Disciplina(String codigo, String nome, int cargaHoraria) {
         this.codigo = codigo;
@@ -42,6 +43,10 @@ public class Disciplina {
     public Curso getCurso() { return curso; }
 
     public void setCurso(Curso curso) { this.curso = curso; }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     @Override
     public String toString() {

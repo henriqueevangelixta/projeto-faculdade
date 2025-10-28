@@ -22,20 +22,6 @@ public class CursoView {
         curso.setTurno(scan.next());
     }
 
-    public static void Atualizar(Curso curso) {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.print("(" + curso.getNome() + ") - Novo nome do curso (ou Enter p/ manter): ");
-        String nome = scan.nextLine();
-        if (!nome.isEmpty()) curso.setNome(nome);
-
-        System.out.print("(" + curso.getTurno() + ") - Novo turno (ou Enter p/ manter): ");
-        String turno = scan.nextLine();
-        if (!turno.isEmpty()) curso.setTurno(turno);
-
-        System.out.println("Curso atualizado com sucesso!");
-    }
-
     public static void Consultar(Curso curso) {
         if (curso == null) {
             System.out.println("Curso não encontrado!");
@@ -53,6 +39,18 @@ public class CursoView {
             System.out.println("Nenhuma disciplina cadastrada neste curso.");
         }
         System.out.println();
+    }
+
+    public static void Atualizar(Curso curso) {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("(" + curso.getNome() + ") - Novo nome do curso (ou Enter p/ manter): ");
+        String nome = scan.nextLine();
+        if (!nome.isEmpty()) curso.setNome(nome);
+
+        System.out.print("(" + curso.getTurno() + ") - Novo turno (ou Enter p/ manter): ");
+        String turno = scan.nextLine();
+        if (!turno.isEmpty()) curso.setTurno(turno);
     }
 
     public static String GetCodigo() {

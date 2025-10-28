@@ -66,34 +66,33 @@ public class DisciplinaView {
         return true;
     }
 
-
-    public static void Atualizar(Disciplina disciplina) {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.print("(" + disciplina.getCodigo() + ") - Código: ");
-        String codigo = scan.nextLine();
-        if (!codigo.isEmpty()) { disciplina.setCodigo(codigo); }
-
-        System.out.print("(" + disciplina.getNome() + ") - Nome: ");
-        String nome = scan.nextLine();
-        if (!nome.isEmpty()) { disciplina.setNome(nome); }
-
-        System.out.print("(" + disciplina.getCargaHoraria() + ") - Carga horária: ");
-        String carga = scan.nextLine();
-        if (!carga.isEmpty()) { disciplina.setCargaHoraria(Integer.parseInt(carga)); }
-    }
-
-    public static void Listar(List<Disciplina> disciplinas) {
-        for (Disciplina d : disciplinas) {
-            Consultar(d);
-        }
-    }
-
     public static void Consultar(Disciplina disciplina) {
         System.out.println("Código: " + disciplina.getCodigo());
         System.out.println("Nome: " + disciplina.getNome());
         System.out.println("Carga horária: " + disciplina.getCargaHoraria());
         System.out.println();
+    }
+
+    public static void Atualizar(Disciplina disciplina) {
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("(" + disciplina.getNome() + ") - Novo nome (ou Enter p/ manter): ");
+        String nome = scan.nextLine();
+        if (!nome.isEmpty()) {
+            disciplina.setNome(nome);
+        }
+
+        System.out.print("(" + disciplina.getCargaHoraria() + ") - Nova carga horária (ou Enter p/ manter): ");
+        String cargaStr = scan.nextLine();
+        if (!cargaStr.isEmpty()) {
+            try {
+                disciplina.setCargaHoraria(Integer.parseInt(cargaStr));
+            } catch (NumberFormatException e) {
+                System.out.println("Carga horária inválida, mantendo a anterior.");
+            }
+        }
+
+        System.out.println("Curso atual: " + disciplina.getCurso().getNome());
     }
 
     public static String GetCodigo() {

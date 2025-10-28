@@ -1,53 +1,29 @@
 package database;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DatabaseConnection {
 
-    private static Connection connection = null;
-    private static final String HOST = "jdbc:mysql://localhost/";
+    private static final String HOST = "jdbc:mysql://localhost:3306/";
     private static final String DB_USER = "root";
     private static final String DB_PASS = "";
-    private static final String DATABASE = "faculdade";
+    private static final String DATABASE = "projeto-faculdade";
 
     private DatabaseConnection() {}
 
+    // Este método agora CRIA e RETORNA uma NOVA conexão toda vez que é chamado.
+
     public static Connection getConnection() {
-        if (connection == null) {
-            synchronized (DatabaseConnection.class) {
-                if (connection == null) {
-                    String user = DB_USER;
-                    String pass = DB_PASS;
-                    if (user == null || pass == null) {
-                        throw new RuntimeException("Usuário ou senha não definidos");
-                    }
-
-                    try {
-                        System.out.println("Conectando…");
-                        // Criar a conexão com o banco de dados
-                        connection = DriverManager.getConnection(
-                                HOST + DATABASE, user, pass
-                        );
-                        System.out.println("Conexão bem-sucedida!");
-                    } catch (SQLException e) {
-                        System.out.println("Erro ao conectar: " + e.getMessage());
-                        throw new RuntimeException("Falha ao conectar ao banco de dados", e);
-                    }
-                }
-            }
-        }
-        return connection;
-    }
-
-    public static void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-                connection = null;
-                System.out.println("Conexão fechada.");
-            } catch (SQLException e) {
-                System.out.println("Erro ao fechar a conexão: " + e.getMessage());
-            }
+        try {
+            // Não há mais 'if (connection == null)' Ele sempre cria uma nova conexão
+            return DriverManager.getConnection(
+                    HOST + DATABASE, DB_USER, DB_PASS
+            );
+        } catch (SQLException e) {
+            // Se falhar, lança a exceção para o DAO saber
+            throw new RuntimeException("Falha ao conectar ao banco de dados", e);
         }
     }
 }

@@ -16,7 +16,6 @@ public class DisciplinaController {
         } else {
             System.out.println("A disciplina não foi cadastrada!");
         }
-
     }
 
     public static void Consultar() {
@@ -28,32 +27,38 @@ public class DisciplinaController {
     public static void Atualizar() {
         String codigo = DisciplinaView.GetCodigo();
         Disciplina disciplina = DisciplinaDAO.Get(codigo);
+        if (disciplina == null) {
+            System.out.println("Disciplina não encontrada.");
+            return;
+        }
         DisciplinaView.Atualizar(disciplina);
-        System.out.println("Disciplina atualizada com sucesso!");
+
+        try {
+            DisciplinaDAO.Update(disciplina);
+            System.out.println("Disciplina atualizada com sucesso!");
+
+        } catch (Exception e) {
+            System.out.println("Falha ao atualizar a disciplina no banco de dados:");
+            e.printStackTrace();
+        }
     }
 
     public static void Deletar() {
         String codigo = DisciplinaView.GetCodigo();
-
-        // Busca o objeto Disciplina COMPLETO
         Disciplina disciplinaParaRemover = DisciplinaDAO.Get(codigo);
 
-        // Verifica se a disciplina foi encontrada
         if (disciplinaParaRemover == null) {
             System.out.println("Erro: Disciplina não encontrada.");
             return;
         }
-        // Pega o "pai" da disciplina
+
         Curso cursoPai = disciplinaParaRemover.getCurso();
 
-        // Manda o "pai" remover a disciplina da sua lista interna
         if (cursoPai != null) {
             cursoPai.removeDisciplina(disciplinaParaRemover);
         }
 
-        // Remove a disciplina do DAO principal
         DisciplinaDAO.Delete(codigo);
-
         System.out.println("Disciplina removida com sucesso!");
     }
 }
