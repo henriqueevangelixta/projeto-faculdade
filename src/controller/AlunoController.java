@@ -20,10 +20,6 @@ public class AlunoController {
         AlunoView.Consultar(aluno);
     }
 
-    // public static void Listar() {
-        // AlunoView.Listar(AlunoDAO.GetAll());
-    //}
-
     public static void Atualizar() {
         String matricula = AlunoView.GetMatricula();
         Aluno aluno = AlunoDAO.Get(matricula);

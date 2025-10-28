@@ -6,18 +6,15 @@ public class Disciplina {
     private int cargaHoraria;
     private Curso curso;
 
-    // Construtor com parâmetros
     public Disciplina(String codigo, String nome, int cargaHoraria) {
         this.codigo = codigo;
         this.nome = nome;
         this.cargaHoraria = cargaHoraria;
     }
 
-    // Construtor vazio
     public Disciplina() {
     }
 
-    // Getters e Setters
     public String getCodigo() {
         return codigo;
     }
@@ -43,5 +40,11 @@ public class Disciplina {
     }
 
     public Curso getCurso() { return curso; }
+
     public void setCurso(Curso curso) { this.curso = curso; }
+
+    @Override
+    public String toString() {
+        return this.nome;
+    }
 }

@@ -20,9 +20,6 @@ public class CursoController {
         CursoView.Consultar(curso);
     }
 
-    public static void Listar() {
-        CursoView.Listar(CursoDAO.GetAll());
-    }
 
     public static void Atualizar() {
         String codigo = CursoView.GetCodigo();

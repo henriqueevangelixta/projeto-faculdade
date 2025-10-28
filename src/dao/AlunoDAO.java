@@ -17,7 +17,6 @@ public class AlunoDAO {
 
     public static void Add(Aluno aluno) {
         listAlunos.add(aluno);
-        System.out.println("Aluno cadastrado com sucesso!");
     }
 
 //    public static void Add(Aluno aluno) {
@@ -80,6 +79,7 @@ public class AlunoDAO {
     public static void Delete(String matricula) {
         Aluno aluno = Get(matricula);
         listAlunos.remove(aluno);
+        System.out.println("Aluno removido com sucesso!");
     }
 
 //    public static void Criar() {

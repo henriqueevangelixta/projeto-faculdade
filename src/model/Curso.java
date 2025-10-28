@@ -29,10 +29,17 @@ public class Curso {
     public String getTurno() { return turno; }
     public void setTurno(String turno) { this.turno = turno; }
 
-    public List<Disciplina> getDisciplinas() { return disciplinas; }
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas; }
 
     public void addDisciplina(Disciplina disciplina) {
         disciplinas.add(disciplina);
+    }
+
+    public void removeDisciplina(Disciplina disciplina) {
+        if (this.disciplinas != null) {
+            this.disciplinas.remove(disciplina);
+        }
     }
 
     @Override

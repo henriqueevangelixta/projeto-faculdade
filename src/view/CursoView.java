@@ -32,6 +32,8 @@ public class CursoView {
         System.out.print("(" + curso.getTurno() + ") - Novo turno (ou Enter p/ manter): ");
         String turno = scan.nextLine();
         if (!turno.isEmpty()) curso.setTurno(turno);
+
+        System.out.println("Curso atualizado com sucesso!");
     }
 
     public static void Consultar(Curso curso) {
@@ -51,12 +53,6 @@ public class CursoView {
             System.out.println("Nenhuma disciplina cadastrada neste curso.");
         }
         System.out.println();
-    }
-
-    public static void Listar(List<Curso> cursos) {
-        for (Curso c : cursos) {
-            Consultar(c);
-        }
     }
 
     public static String GetCodigo() {

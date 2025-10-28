@@ -3,6 +3,7 @@ package view;
 import dao.CursoDAO;
 import model.Aluno;
 import model.Curso;
+import model.Disciplina;
 
 import java.util.List;
 import java.util.Scanner;
@@ -15,10 +16,19 @@ public class AlunoView {
         System.out.print("Nome: ");
         aluno.setNome(scan.nextLine());
 
-        System.out.print("Idade: ");
-        aluno.setIdade(scan.nextInt());
-
-        scan.nextLine();
+        int idade = 0;
+        while (true) {
+            System.out.print("Idade: ");
+            if (scan.hasNextInt()) {
+                idade = scan.nextInt();
+                scan.nextLine(); // Limpa o buffer do nextInt()
+                aluno.setIdade(idade);
+                break; // Sai do loop, pois a idade é válida
+            } else {
+                System.out.println("Idade inválida! Digite apenas números.");
+                scan.next(); // Limpa a entrada inválida (ex: "abc")
+            }
+        }
 
         System.out.print("Matricula: ");
         aluno.setMatricula(scan.nextLine());
@@ -34,17 +44,28 @@ public class AlunoView {
         for (int i = 0; i < cursos.size(); i++) {
             System.out.println((i + 1) + " - " + cursos.get(i).getNome());
         }
-        System.out.print("Opção: ");
-        int opc = scan.nextInt();
-        scan.nextLine();
 
-        if (opc > 0 && opc <= cursos.size()) {
-            aluno.setCurso(cursos.get(opc - 1));
-        } else {
-            System.out.println("Opção inválida! O aluno será salvo sem curso.");
+        int opc = 0;
+        while (true) {
+            System.out.print("Opção: ");
+
+            if (scan.hasNextInt()) {
+                opc = scan.nextInt();
+                scan.nextLine(); // Limpa o buffer
+
+                // Verifica se a opção está no intervalo correto
+                if (opc > 0 && opc <= cursos.size()) {
+                    aluno.setCurso(cursos.get(opc - 1));
+                    break;
+                } else {
+                    System.out.println("Opção inválida! Digite um número entre 1 e " + cursos.size() + ".");
+                }
+            } else {
+                System.out.println("Entrada inválida! Digite apenas o número da opção.");
+                scan.next(); // Limpa a entrada inválida (ex: "a")
+            }
         }
-
-
+        System.out.println("Aluno cadastrado com sucesso!");
     }
 
     public static String GetMatricula() {
@@ -58,7 +79,24 @@ public class AlunoView {
         System.out.println("Matrícula: " + aluno.getMatricula());
         System.out.println("Nome: " + aluno.getNome());
         System.out.println("Idade: " + aluno.getIdade());
-        System.out.println("Cadastrado no curso: " + aluno.getCurso().getNome());
+
+        Curso cursoDoAluno = aluno.getCurso();
+
+        if (cursoDoAluno != null) {
+            System.out.println("Cadastrado no curso: " + cursoDoAluno.getNome());
+            // Pega a lista de disciplinas de DENTRO do objeto Curso
+            List<Disciplina> disciplinasDoCurso = cursoDoAluno.getDisciplinas();
+            // Verifica se o curso tem disciplinas cadastradas
+            if (disciplinasDoCurso == null || disciplinasDoCurso.isEmpty()) {
+                System.out.println("-> Disciplinas: (Este curso ainda não possui disciplinas)");
+            } else {
+                // 6. Se tiver, faz um loop e imprime o nome de cada uma
+                System.out.println("Disciplinas Cadastradas:");
+                for (Disciplina disciplina : disciplinasDoCurso) {
+                    System.out.println("- " + disciplina);
+                }
+            }
+        }
         System.out.println();
     }
 
@@ -66,23 +104,23 @@ public class AlunoView {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("("+ aluno.getNome() + ") - Nome: ");
-        String nome = scan.next();
-        if (!nome.isEmpty()) { aluno.setNome(nome); }
+        String nome = scan.nextLine();
+        if (!nome.isEmpty()) {
+            aluno.setNome(nome);
+        }
 
         System.out.print("("+ aluno.getIdade() + ") - Idade: ");
-        String idade = scan.nextLine();
-        if (!idade.isEmpty()) { aluno.setIdade(Integer.parseInt(idade)); }
+        String idadeStr = scan.nextLine(); // Mudei para 'idadeStr' para clareza
 
+        if (!idadeStr.isEmpty()) {
+            try {
+                // .trim() remove espaços em branco antes ou depois
+                aluno.setIdade(Integer.parseInt(idadeStr.trim()));
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada de idade inválida. Mantendo a idade anterior.");
+            }
+        }
+        System.out.println("Aluno atualizado com sucesso!");
     }
-
-//    public static void Listar(List<Aluno> alunos) {
-//        for(Aluno a : alunos) {
-//            Consultar(a);
-//        }
-//    }
-
-
-
-
 
 }
